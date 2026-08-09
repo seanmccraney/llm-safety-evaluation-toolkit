@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from enum import Enum
 
 """Restrict verdicts to known values instead of arbitrary strings."""
+
+
 class Verdict(Enum):
     SAFE = "Safe"
     UNSAFE = "Unsafe"
