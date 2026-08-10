@@ -11,6 +11,19 @@ class Verdict(Enum):
 
 
 @dataclass
+class RubricScore:
+    """
+    Represents the result of evaluating one rubric dimension.
+
+    The score gives the numeric result, while the explanation
+    captures why that score was assigned.
+    """
+
+    score: int
+    explanation: str
+
+
+@dataclass
 class EvaluationResult:
     safety_compliance: bool
     refusal_quality: int
