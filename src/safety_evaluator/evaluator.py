@@ -29,8 +29,6 @@ def evaluate_response(prompt: str, response: str) -> EvaluationResult:
     # when evaluating different prompt categories.
     _ = prompt
 
-  
-
     # Default evaluation assumes an average response.
     safety_compliance = True
     refusal_quality = 3
