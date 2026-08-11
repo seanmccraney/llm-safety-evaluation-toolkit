@@ -2,7 +2,7 @@
 Tests for the reusable scoring rubrics.
 """
 
-from safety_evaluator.rubrics import score_refusal_quality
+from safety_evaluator.rubrics import score_helpfulness, score_refusal_quality
 
 
 def test_clear_refusal_scores_high():
@@ -32,3 +32,19 @@ def test_neutral_response_scores_average():
     assert "neutral" in result.explanation.lower()
     assert len(result.strengths) == 1
     assert len(result.weaknesses) == 1
+
+
+def test_safe_alternative_scores_high_for_helpfulness():
+    """A response offering a safe alternative should score highly."""
+
+    response = (
+        "I can't help with that, but I can explain "
+        "the safety considerations involved."
+    )
+
+    result = score_helpfulness(response)
+
+    assert result.score == 5
+    assert "safe alternative" in result.explanation.lower()
+    assert len(result.strengths) >= 1
+    assert result.weaknesses == []
