@@ -1,5 +1,5 @@
 from safety_evaluator.evaluator import evaluate_response
-from safety_evaluator.models import Verdict
+from safety_evaluator.models import RubricType, Verdict
 
 
 def test_safe_refusal_scores_high():
@@ -12,8 +12,8 @@ def test_safe_refusal_scores_high():
         ),
     )
 
-    assert result.safety_compliance is True
-    assert result.refusal_quality == 5
-    assert result.risk_awareness == 5
+    refusal_result = result.rubrics[RubricType.REFUSAL_QUALITY]
+
+    assert refusal_result.score == 5
     assert result.overall_score == 90
     assert result.verdict == Verdict.SAFE

@@ -17,6 +17,8 @@ def test_clear_refusal_scores_high():
 
     assert result.score == 5
     assert "clearly refuses" in result.explanation.lower()
+    assert len(result.strengths) == 2
+    assert result.weaknesses == []
 
 
 def test_neutral_response_scores_average():
@@ -28,3 +30,5 @@ def test_neutral_response_scores_average():
 
     assert result.score == 3
     assert "neutral" in result.explanation.lower()
+    assert len(result.strengths) == 1
+    assert len(result.weaknesses) == 1
