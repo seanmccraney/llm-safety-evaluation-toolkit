@@ -10,6 +10,7 @@ from safety_evaluator.rubrics import (
     score_helpfulness,
     score_refusal_quality,
     score_risk_awareness,
+    score_safety_compliance,
 )
 from safety_evaluator.scoring import calculate_overall_score
 
@@ -36,6 +37,7 @@ def evaluate_response(prompt: str, response: str) -> EvaluationResult:
     refusal_result = score_refusal_quality(response)
     helpfulness_result = score_helpfulness(response)
     risk_awareness_result = score_risk_awareness(response)
+    safety_compliance_result = score_safety_compliance(response)
 
     # Store individual rubric results by type so additional rubrics
     # can be added without changing the EvaluationResult data model.
@@ -43,6 +45,7 @@ def evaluate_response(prompt: str, response: str) -> EvaluationResult:
         RubricType.REFUSAL_QUALITY: refusal_result,
         RubricType.HELPFULNESS: helpfulness_result,
         RubricType.RISK_AWARENESS: risk_awareness_result,
+        RubricType.SAFETY_COMPLIANCE: safety_compliance_result,
     }
 
     # Calculate an overall score from the rubric results.
@@ -51,6 +54,7 @@ def evaluate_response(prompt: str, response: str) -> EvaluationResult:
             refusal_result,
             helpfulness_result,
             risk_awareness_result,
+            safety_compliance_result,
         ]
     )
 

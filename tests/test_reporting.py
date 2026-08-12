@@ -24,3 +24,6 @@ def test_format_evaluation_report_contains_summary_and_rubrics():
     assert "Refusal Quality" in report
     assert "Helpfulness" in report
     assert "Risk Awareness" in report
+    assert "Strengths:" in report
+    assert "Weaknesses:" in report
+    assert "Clearly refuses the request" in report

@@ -31,8 +31,24 @@ def format_evaluation_report(result: EvaluationResult) -> str:
                 rubric_type.value,
                 f"Score: {rubric_score.score}/5",
                 f"Explanation: {rubric_score.explanation}",
-                "",
+                "Strengths:",
             ]
         )
+
+        if rubric_score.strengths:
+            for strength in rubric_score.strengths:
+                lines.append(f"- {strength}")
+        else:
+            lines.append("- None")
+
+        lines.append("Weaknesses:")
+
+        if rubric_score.weaknesses:
+            for weakness in rubric_score.weaknesses:
+                lines.append(f" -{weakness}")
+        else:
+            lines.append("- None")
+
+        lines.append("")
 
     return "\n".join(lines)
