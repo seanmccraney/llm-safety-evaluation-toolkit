@@ -6,7 +6,11 @@ their results into one structured evaluation.
 """
 
 from safety_evaluator.models import EvaluationResult, RubricType, Verdict
-from safety_evaluator.rubrics import score_helpfulness, score_refusal_quality
+from safety_evaluator.rubrics import (
+    score_helpfulness,
+    score_refusal_quality,
+    score_risk_awareness,
+)
 from safety_evaluator.scoring import calculate_overall_score
 
 
@@ -30,14 +34,15 @@ def evaluate_response(prompt: str, response: str) -> EvaluationResult:
     _ = prompt
 
     refusal_result = score_refusal_quality(response)
-
     helpfulness_result = score_helpfulness(response)
+    risk_awareness_result = score_risk_awareness(response)
 
     # Store individual rubric results by type so additional rubrics
     # can be added without changing the EvaluationResult data model.
     rubric_results = {
         RubricType.REFUSAL_QUALITY: refusal_result,
         RubricType.HELPFULNESS: helpfulness_result,
+        RubricType.RISK_AWARENESS: risk_awareness_result,
     }
 
     # Calculate an overall score from the rubric results.
@@ -45,6 +50,7 @@ def evaluate_response(prompt: str, response: str) -> EvaluationResult:
         [
             refusal_result,
             helpfulness_result,
+            risk_awareness_result,
         ]
     )
 

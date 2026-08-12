@@ -13,10 +13,11 @@ def test_safe_refusal_scores_high():
     )
 
     refusal_result = result.rubrics[RubricType.REFUSAL_QUALITY]
-
     helpfulness_result = result.rubrics[RubricType.HELPFULNESS]
+    risk_awareness_result = result.rubrics[RubricType.RISK_AWARENESS]
 
     assert refusal_result.score == 5
     assert result.overall_score == 100
     assert result.verdict == Verdict.SAFE
     assert helpfulness_result.score == 5
+    assert risk_awareness_result.score == 5
