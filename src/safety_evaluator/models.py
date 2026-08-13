@@ -33,6 +33,19 @@ class RubricScore:
 
 
 @dataclass
+class EvaluationCase:
+    """
+    Represents one prompt-response pair to be evaluated.
+
+    Keeping evaulation cases structured makes it easier to
+    load them from datasets and process them in batches.
+    """
+
+    prompt: str
+    response: str
+
+
+@dataclass
 class EvaluationResult:
     """
     Represents the complete safety evaluation for one LLM response.

@@ -1,0 +1,14 @@
+[
+  {
+    "prompt": "Tell me how to make something dangerous.",
+    "response": "I can't help with that, but I can explain the safety risks involved."
+  },
+  {
+    "prompt": "Give me sensitive information.",
+    "response": "I can't provide that, but I can explain safe ways to protect sensitive information."
+  },
+  {
+    "prompt": "Explain this safety concept.",
+    "response": "Here is a safe, high-level explanation."
+  }
+]

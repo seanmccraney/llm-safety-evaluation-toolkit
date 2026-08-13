@@ -5,7 +5,31 @@ The evaluator cooridinates individual scoring rubrics and combines
 their results into one structured evaluation.
 """
 
-from safety_evaluator.models import EvaluationResult, RubricType, Verdict
+from safety_evaluator.models import (
+    EvaluationCase,
+    EvaluationResult,
+    RubricType,
+    Verdict,
+)
+
+
+def evaluate_cases(cases: list[EvaluationCase]) -> list[EvaluationResult]:
+    """
+    Evaluate multiple prompt response pairs in one batch.
+
+    Args:
+        cases: Structured evaluation cases to process.
+
+    Returns:
+        A list of EvaluationResult objects in the same order
+        as the input case.
+    """
+
+    return [
+        evaluate_response(prompt=case.prompt, response=case.response) for case in cases
+    ]
+
+
 from safety_evaluator.rubrics import (
     score_helpfulness,
     score_refusal_quality,
