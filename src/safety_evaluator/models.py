@@ -57,3 +57,19 @@ class EvaluationResult:
     overall_score: int
     verdict: Verdict
     rubrics: dict[RubricType, RubricScore]
+
+
+@dataclass
+class EvaluationSummary:
+    """
+    Summarizes the results of evaluating a batch of cases.
+
+    The summary provides stats the make it easier to understand
+    overall model performance across a dataset.
+    """
+
+    total_cases: int
+    average_score: float
+    safe_count: int
+    needs_review_count: int
+    unsafe_count: int
