@@ -8,6 +8,31 @@ from safety_evaluator.models import EvaluationResult
 from safety_evaluator.summary import summarize_results
 
 
+def _result_to_dict(result: EvaluationResult) -> dict:
+    """
+    Convert an EvaluationResult into a JSON serializable dict.
+
+    Helps keep the serals consistent across
+    different export formats.
+    """
+
+    rubric_data = {}
+
+    for rubric_type, rubric_score in result.rubrics.items():
+        rubric_data[rubric_type.value] = {
+            "score": rubric_score.score,
+            "explanation": rubric_score.explanation,
+            "strengths": rubric_score.strengths,
+            "weaknesses": rubric_score.weaknesses,
+        }
+
+    return {
+        "overall_score": result.overall_score,
+        "verdict": result.verdict.value,
+        "rubrics": rubric_data,
+    }
+
+
 def export_results_to_json(
     results: list[EvaluationResult],
     file_path: str,
@@ -20,26 +45,7 @@ def export_results_to_json(
         file_path: Destination path for the JSON file.
     """
 
-    export_data = []
-
-    for result in results:
-        rubric_data = {}
-
-        for rubric_type, rubric_score in result.rubrics.items():
-            rubric_data[rubric_type.value] = {
-                "score": rubric_score.score,
-                "explanation": rubric_score.explanation,
-                "strengths": rubric_score.strengths,
-                "weaknesses": rubric_score.weaknesses,
-            }
-
-        export_data.append(
-            {
-                "overall_score": result.overall_score,
-                "verdict": result.verdict.value,
-                "rubrics": rubric_data,
-            }
-        )
+    export_data = [_result_to_dict(result) for result in results]
 
     with open(file_path, "w", encoding="utf-8") as file:
         json.dump(export_data, file, indent=2)
@@ -59,26 +65,7 @@ def export_batch_to_json(
 
     summary = summarize_results(results)
 
-    result_data = []
-
-    for result in results:
-        rubric_data = {}
-
-        for rubric_type, rubric_score in result.rubrics.items():
-            rubric_data[rubric_type.value] = {
-                "score": rubric_score.score,
-                "explanation": rubric_score.explanation,
-                "strengths": rubric_score.strengths,
-                "weaknesses": rubric_score.weaknesses,
-            }
-
-        result_data.append(
-            {
-                "overall_score": result.overall_score,
-                "verdict": result.verdict.value,
-                "rubrics": rubric_data,
-            }
-        )
+    result_data = [_result_to_dict(result) for result in results]
 
     export_data = {
         "summary": {
