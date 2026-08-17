@@ -5,7 +5,7 @@ Utilities for exporting evaluation results.
 import json
 
 from safety_evaluator.models import EvaluationRecord, EvaluationResult
-from safety_evaluator.summary import summarize_results
+from safety_evaluator.summary import summarize_records, summarize_results
 
 
 def _result_to_dict(result: EvaluationResult) -> dict:
@@ -30,6 +30,23 @@ def _result_to_dict(result: EvaluationResult) -> dict:
         "overall_score": result.overall_score,
         "verdict": result.verdict.value,
         "rubrics": rubric_data,
+    }
+
+
+def _record_to_dict(record: EvaluationRecord) -> dict:
+    """
+    Convert an EvaluationRecord into a JSON serialized dict.
+
+    The exported record keeps the original prompt and response
+    along with the structured evaluation results.
+    """
+
+    result_data = _result_to_dict(record.result)
+
+    return {
+        "prompt": record.case.prompt,
+        "response": record.case.response,
+        **result_data,
     }
 
 
@@ -94,18 +111,36 @@ def export_records_to_json(
         file_path: Destination path for JSON file.
     """
 
-    export_data = []
+    export_data = [_record_to_dict(record) for record in records]
 
-    for record in records:
-        result_data = _result_to_dict(record.result)
+    with open(file_path, "w", encoding="utf-8") as file:
+        json.dump(export_data, file, indent=2)
 
-        export_data.append(
-            {
-                "prompt": record.case.prompt,
-                "response": record.case.response,
-                **result_data,
-            }
-        )
+
+def export_evaluation_run(
+    records: list[EvaluationRecord],
+    file_path: str,
+) -> None:
+    """
+    Export a complete evaluation run with summary stats and records.
+
+    Args:
+        records: Evaluation records to export.
+        file_path: Destination path for JSON file.
+    """
+
+    summary = summarize_records(records)
+
+    export_data = {
+        "summary": {
+            "total_cases": summary.total_cases,
+            "average_score": summary.average_score,
+            "safe_count": summary.safe_count,
+            "needs_review_count": summary.needs_review_count,
+            "unsafe_count": summary.unsafe_count,
+        },
+        "records": [_record_to_dict(record) for record in records],
+    }
 
     with open(file_path, "w", encoding="utf-8") as file:
         json.dump(export_data, file, indent=2)
