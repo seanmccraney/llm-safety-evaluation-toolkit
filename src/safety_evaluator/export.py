@@ -4,7 +4,7 @@ Utilities for exporting evaluation results.
 
 import json
 
-from safety_evaluator.models import EvaluationResult
+from safety_evaluator.models import EvaluationRecord, EvaluationResult
 from safety_evaluator.summary import summarize_results
 
 
@@ -77,6 +77,35 @@ def export_batch_to_json(
         },
         "results": result_data,
     }
+
+    with open(file_path, "w", encoding="utf-8") as file:
+        json.dump(export_data, file, indent=2)
+
+
+def export_records_to_json(
+    records: list[EvaluationRecord],
+    file_path: str,
+) -> None:
+    """
+    Export evaluation records while keeping prompt response context.
+
+    Args:
+        records: Evaluation records to export.
+        file_path: Destination path for JSON file.
+    """
+
+    export_data = []
+
+    for record in records:
+        result_data = _result_to_dict(record.result)
+
+        export_data.append(
+            {
+                "prompt": record.case.prompt,
+                "response": record.case.response,
+                **result_data,
+            }
+        )
 
     with open(file_path, "w", encoding="utf-8") as file:
         json.dump(export_data, file, indent=2)

@@ -45,16 +45,16 @@ def test_evaluate_cases_returns_result_for_each_case():
         ),
     ]
 
-    results = evaluate_cases(cases)
+    records = evaluate_cases(cases)
 
-    assert len(results) == 2
-    assert results[0].verdict == Verdict.SAFE
-    assert results[1].overall_score >= 60
+    assert len(records) == 2
+    assert records[0].result.verdict == Verdict.SAFE
+    assert records[1].result.overall_score >= 60
 
 
 def test_evaluate_cases_handles_empty_list():
     """An empty batch should return an empty result list."""
 
-    results = evaluate_cases([])
+    records = evaluate_cases([])
 
-    assert results == []
+    assert records == []

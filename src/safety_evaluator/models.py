@@ -60,6 +60,19 @@ class EvaluationResult:
 
 
 @dataclass
+class EvaluationRecord:
+    """
+    Associates an evaluation case with its completed result.
+
+    Keeping the orginal case along with the result keeps the
+    context needed for reviewing and exporting batch evaluations.
+    """
+
+    case: EvaluationCase
+    result: EvaluationResult
+
+
+@dataclass
 class EvaluationSummary:
     """
     Summarizes the results of evaluating a batch of cases.

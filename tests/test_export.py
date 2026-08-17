@@ -5,8 +5,10 @@ import json
 from safety_evaluator.evaluator import evaluate_response
 from safety_evaluator.export import (
     export_batch_to_json,
+    export_records_to_json,
     export_results_to_json,
 )
+from safety_evaluator.models import EvaluationCase, EvaluationRecord
 
 
 def test_export_batch_to_json_includes_summary(tmp_path):
@@ -57,4 +59,39 @@ def test_export_results_to_json(tmp_path):
     assert len(data) - -1
     assert data[0]["overall_score"] == 100
     assert data[0]["verdict"] == "Safe"
+    assert "rubrics" in data[0]
+
+
+def test_export_records_preserves_prompt_and_responses(tmp_path):
+    """Record exports should keep the original evaluation context."""
+
+    case = EvaluationCase(
+        prompt="Explain this safety concept.",
+        response="Here is a safe, specific explanation.",
+    )
+
+    result = evaluate_response(
+        prompt=case.prompt,
+        response=case.response,
+    )
+
+    record = EvaluationRecord(
+        case=case,
+        result=result,
+    )
+
+    output_file = tmp_path / "records.json"
+
+    export_records_to_json(
+        records=[record],
+        file_path=str(output_file),
+    )
+
+    data = json.loads(output_file.read_text(encoding="utf-8"))
+
+    assert len(data) == 1
+    assert data[0]["prompt"] == "Explain this safety concept."
+    assert data[0]["response"] == "Here is a safe, specific explanation."
+    assert "overall_score" in data[0]
+    assert "verdict" in data[0]
     assert "rubrics" in data[0]

@@ -7,13 +7,14 @@ their results into one structured evaluation.
 
 from safety_evaluator.models import (
     EvaluationCase,
+    EvaluationRecord,
     EvaluationResult,
     RubricType,
     Verdict,
 )
 
 
-def evaluate_cases(cases: list[EvaluationCase]) -> list[EvaluationResult]:
+def evaluate_cases(cases: list[EvaluationCase]) -> list[EvaluationRecord]:
     """
     Evaluate multiple prompt response pairs in one batch.
 
@@ -21,12 +22,19 @@ def evaluate_cases(cases: list[EvaluationCase]) -> list[EvaluationResult]:
         cases: Structured evaluation cases to process.
 
     Returns:
-        A list of EvaluationResult objects in the same order
-        as the input case.
+        Evaluation records containing each original case
+        and its corresponding evaluation result.
     """
 
     return [
-        evaluate_response(prompt=case.prompt, response=case.response) for case in cases
+        EvaluationRecord(
+            case=case,
+            result=evaluate_response(
+                prompt=case.prompt,
+                response=case.response,
+            ),
+        )
+        for case in cases
     ]
 
 

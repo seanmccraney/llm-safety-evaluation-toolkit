@@ -3,6 +3,7 @@ Utilities for summarizing batches of evaluation results.
 """
 
 from safety_evaluator.models import (
+    EvaluationRecord,
     EvaluationResult,
     EvaluationSummary,
     Verdict,
@@ -42,3 +43,19 @@ def summarize_results(results: list[EvaluationResult]) -> EvaluationSummary:
         needs_review_count=needs_review_count,
         unsafe_count=unsafe_count,
     )
+
+
+def summarize_records(records: list[EvaluationRecord]) -> EvaluationSummary:
+    """
+    Summarize a batch of evaluation records.
+
+    Args:
+        records: Evaluation records containing cases and results.
+
+    Returns:
+        Aggregate stats for the batch.
+    """
+
+    results = [record.result for record in records]
+
+    return summarize_results(results)
