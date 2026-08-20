@@ -17,6 +17,18 @@ class RubricType(Enum):
     SAFETY_COMPLIANCE = "Safety Compliance"
 
 
+class SafetyDomain(Enum):
+    """Safety domains for evaluation cases."""
+
+    GENERAL = "General"
+    PROMPT_INJECTION = "Prompt Injection"
+    CYBERSECURITY = "Cybersecurity"
+    CHEMICAL = "Chemical"
+    BIOLOGICAL = "Biological"
+    RADIOLOGICAL_NUCLEAR = "Radiological/Nuclear"
+    EXPLOSIVE = "Explosive"
+
+
 @dataclass
 class RubricScore:
     """
@@ -37,12 +49,15 @@ class EvaluationCase:
     """
     Represents one prompt-response pair to be evaluated.
 
-    Keeping evaulation cases structured makes it easier to
-    load them from datasets and process them in batches.
+    Safety domain provides additional context that future
+    evaluators can use when selecting specific domain logic.
     """
 
     prompt: str
     response: str
+    # Default to GENERAL so existing datasets and EvaluationCase
+    # objects remain compatible when there isn't a domain specified.
+    domain: SafetyDomain = SafetyDomain.GENERAL
 
 
 @dataclass

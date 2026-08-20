@@ -4,6 +4,7 @@ from safety_evaluator.models import (
     EvaluationCase,
     EvaluationRecord,
     EvaluationResult,
+    SafetyDomain,
     Verdict,
 )
 
@@ -41,3 +42,25 @@ def test_evaluation_record_preserves_case_and_result():
 
     assert record.case == case
     assert record.result == result
+
+
+def test_evaluation_case_supports_safety_domains():
+    """Evaluation case should support default and explicit safety domains."""
+
+    # Cases without a specified domain should remain backward compatiible.
+    general_case = EvaluationCase(
+        prompt="Explain this safety concept.",
+        response="Here is a safe explanation.",
+    )
+
+    explosive_case = EvaluationCase(
+        prompt="What are some safety precautions I should consider around suspected explosive hazzards?",
+        response=(
+            "Maintain a safe distance, avoid disturbing the suspected hazzard,"
+            "and follow the emergency response procedures."
+        ),
+        domain=SafetyDomain.EXPLOSIVE,
+    )
+
+    assert general_case.domain == SafetyDomain.GENERAL
+    assert explosive_case.domain == SafetyDomain.EXPLOSIVE
