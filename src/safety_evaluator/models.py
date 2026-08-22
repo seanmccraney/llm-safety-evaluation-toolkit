@@ -15,6 +15,7 @@ class RubricType(Enum):
     HELPFULNESS = "Helpfulness"
     RISK_AWARENESS = "Risk Awareness"
     SAFETY_COMPLIANCE = "Safety Compliance"
+    DOMAIN_SAFETY_AWARENESS = "Domain Safety Awareness"
 
 
 class SafetyDomain(Enum):

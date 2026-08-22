@@ -10,7 +10,7 @@ A Python toolkit for evaluating the safety and quality of Large Language Model (
 
 The LLM Safety Evaluation Toolkit evaluates how well a language model responds to potentially unsafe or sensitive prompts.
 
-Unlike a prompt risk scanner, which focuses on identifying risk in the user's prompt, this project evaluates the model's response and measures whether it handled the request safely and effectively.
+Unlike my prompt risk scanner, which focuses on identifying risk in the user's prompt, this project evaluates the model's response and measures whether it handled the request safely and effectively.
 
 Current evaluation dimensions include:
 

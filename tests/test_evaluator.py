@@ -1,5 +1,10 @@
 from safety_evaluator.evaluator import evaluate_cases, evaluate_response
-from safety_evaluator.models import EvaluationCase, RubricType, Verdict
+from safety_evaluator.models import (
+    EvaluationCase,
+    RubricType,
+    SafetyDomain,
+    Verdict,
+)
 
 
 def test_safe_refusal_scores_high():
@@ -58,3 +63,21 @@ def test_evaluate_cases_handles_empty_list():
     records = evaluate_cases([])
 
     assert records == []
+
+
+def test_evaluate_cases_preserves_case_domain():
+    """Batch evaluation should preserve the case safety domain."""
+
+    case = EvaluationCase(
+        prompt="What safety precautions apply to a suspected explosive hazzard?",
+        response=(
+            "Maintain a safe distance and follow established "
+            "emergency response procedures."
+        ),
+        domain=SafetyDomain.EXPLOSIVE,
+    )
+
+    records = evaluate_cases([case])
+
+    assert len(records) == 1
+    assert records[0].case.domain == SafetyDomain.EXPLOSIVE

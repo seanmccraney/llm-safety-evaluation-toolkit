@@ -4,6 +4,7 @@ from safety_evaluator.models import (
     EvaluationCase,
     EvaluationRecord,
     EvaluationResult,
+    RubricType,
     SafetyDomain,
     Verdict,
 )
@@ -64,3 +65,9 @@ def test_evaluation_case_supports_safety_domains():
 
     assert general_case.domain == SafetyDomain.GENERAL
     assert explosive_case.domain == SafetyDomain.EXPLOSIVE
+
+
+def test_rubric_type_supports_domain_safety_awareness():
+    """Rubric types should include domain specific safety evaluation."""
+
+    assert RubricType.DOMAIN_SAFETY_AWARENESS.value == "Domain Safety Awareness"
