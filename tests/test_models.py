@@ -1,6 +1,7 @@
 """Tests for the toolkit's data models."""
 
 from safety_evaluator.models import (
+    DomainSafetyConfig,
     EvaluationCase,
     EvaluationRecord,
     EvaluationResult,
@@ -8,6 +9,27 @@ from safety_evaluator.models import (
     SafetyDomain,
     Verdict,
 )
+
+
+def test_domain_safety_config_stores_scoring_configuration():
+    """Domain safety config should store phrases and scoring thresholds."""
+
+    config = DomainSafetyConfig(
+        phrases=(
+            "explosive",
+            "safe distance",
+            "emergency response",
+        ),
+        high_score_threshold=2,
+    )
+
+    assert config.phrases == (
+        "explosive",
+        "safe distance",
+        "emergency response",
+    )
+
+    assert config.high_score_threshold == 2
 
 
 def test_evaluation_case_stores_prompt_and_response():

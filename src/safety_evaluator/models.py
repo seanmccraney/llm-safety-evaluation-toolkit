@@ -30,6 +30,23 @@ class SafetyDomain(Enum):
     EXPLOSIVE = "Explosive"
 
 
+@dataclass(frozen=True)
+class DomainSafetyConfig:
+    """
+    Configuration used when evaluating a specific safety domian
+
+    Attributes:
+        phrases:
+            safety related phrases associated with the domain.
+
+        high_score_threshold:
+            Number of phrase matches required for strong domain awareness.
+    """
+
+    phrases: tuple[str, ...]
+    high_score_threshold: int = 1
+
+
 @dataclass
 class RubricScore:
     """
