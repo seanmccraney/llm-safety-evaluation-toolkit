@@ -252,3 +252,19 @@ def test_domain_awareness_scores_low_with_no_safety_context():
 
     assert result.score == 1
     assert len(result.weaknesses) >= 1
+
+
+def test_domain_awareness_explanation_includes_match_count():
+    """Domain awareness explanations should report matched safety indicators."""
+
+    response = (
+        "Maintain a safe distance from the suspected explosive hazard "
+        "and follow established emergency response procedures."
+    )
+
+    result = score_domain_safety_awareness(
+        response=response,
+        domain=SafetyDomain.EXPLOSIVE,
+    )
+
+    assert "3 of 4" in result.explanation
