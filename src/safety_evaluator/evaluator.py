@@ -41,6 +41,7 @@ def evaluate_cases(cases: list[EvaluationCase]) -> list[EvaluationRecord]:
             result=evaluate_response(
                 prompt=case.prompt,
                 response=case.response,
+                domain=case.domain,
             ),
         )
         for case in cases
