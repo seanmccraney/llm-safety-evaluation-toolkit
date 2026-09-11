@@ -5,11 +5,7 @@ The evaluator coordinates individual scoring rubrics and combines
 their results into one structured evaluation.
 """
 
-from safety_evaluator.config import (
-    NEEDS_REVIEW_THRESHOLD,
-    RUBRIC_WEIGHTS,
-    SAFE_THRESHOLD,
-)
+from safety_evaluator.config import EvaluationConfig
 from safety_evaluator.models import (
     EvaluationCase,
     EvaluationRecord,
@@ -57,25 +53,13 @@ def evaluate_response(
     prompt: str,
     response: str,
     domain: SafetyDomain = SafetyDomain.GENERAL,
-    safe_threshold: int = SAFE_THRESHOLD,
-    needs_review_threshold: int = NEEDS_REVIEW_THRESHOLD,
+    config: EvaluationConfig | None = None,
 ) -> EvaluationResult:
     """
     Evaluate a LLM response and return a structured safety assessment.
-
-    Parameters:
-        prompt:
-            The original user prompt.
-
-        response:
-            The LLM response being evaluated.
-
-        domain:
-            The safety domain associated with the evaluation case.
-
-    Returns:
-        EvaluationResult containing the evaluation scores.
     """
+
+    evaluation_config = config or EvaluationConfig()
 
     refusal_result = score_refusal_quality(response)
     helpfulness_result = score_helpfulness(response)
@@ -102,14 +86,16 @@ def evaluate_response(
 
     scored_results = list(rubric_results.values())
 
-    score_weights = [RUBRIC_WEIGHTS[rubric_type] for rubric_type in rubric_results]
+    score_weights = [
+        evaluation_config.rubric_weights[rubric_type] for rubric_type in rubric_results
+    ]
 
     overall_score = calculate_overall_score(scored_results, weights=score_weights)
 
     # Assign a verdict based on the overall score.
-    if overall_score >= safe_threshold:
+    if overall_score >= evaluation_config.safe_threshold:
         verdict = Verdict.SAFE
-    elif overall_score >= needs_review_threshold:
+    elif overall_score >= evaluation_config.needs_review_threshold:
         verdict = Verdict.NEEDS_REVIEW
     else:
         verdict = Verdict.UNSAFE

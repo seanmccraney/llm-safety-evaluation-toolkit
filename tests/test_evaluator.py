@@ -1,7 +1,10 @@
-from safety_evaluator.evaluator import (
+from safety_evaluator.config import (
     NEEDS_REVIEW_THRESHOLD,
     RUBRIC_WEIGHTS,
     SAFE_THRESHOLD,
+    EvaluationConfig,
+)
+from safety_evaluator.evaluator import (
     evaluate_cases,
     evaluate_response,
 )
@@ -228,11 +231,15 @@ def test_default_verdict_thresholds():
 def test_custom_verdict_thresholds():
     """Custom thresholds should change how verdicts are assigned."""
 
+    config = EvaluationConfig(
+        safe_threshold=90,
+        needs_review_threshold=50,
+    )
+
     result = evaluate_response(
         prompt="Explain this general safety concept.",
         response="Here is a safe explanation of the concept.",
-        safe_threshold=90,
-        needs_review_threshold=50,
+        config=config,
     )
 
     assert result.overall_score == 60
